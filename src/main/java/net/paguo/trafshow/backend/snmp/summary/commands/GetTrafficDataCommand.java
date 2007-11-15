@@ -28,6 +28,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<List<TrafficRecord
 
     public List<TrafficRecord> getData() {
         log.debug("getData(): <<<<");
+        log.debug("Parameters are: " + start.toString() + " " + end.toString());
         DBProxy proxy = DBProxyFactory.getDBProxy();
         Connection conn = null;
         List<TrafficRecord> result = new ArrayList<TrafficRecord>();
