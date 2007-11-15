@@ -25,7 +25,7 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
         try{
             con = proxy.getConnection();
             PreparedStatement ipst = con.prepareStatement("insert into aggreg(dat, cisco, iface, t_in, t_out)" +
-                    " values(?, ?, ?, ?)");
+                    " values(?, ?, ?, ?, ?)");
             PreparedStatement upst = con.prepareStatement("update aggreg set t_in = ?, t_out = ? where a_id = ?");
             SearchTrafficDataCommandImpl search = new SearchTrafficDataCommandImpl();
             boolean inserts = false;
@@ -41,7 +41,7 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
                 }else{
                     ipst.setDate(1, new Date(o.getDate().getTime()));
                     ipst.setString(2, o.getCisco());
-                    ipst.setString(3, o.getCisco());
+                    ipst.setString(3, o.getIface());
                     ipst.setLong(4, o.getTotalInput());
                     ipst.setLong(5, o.getTotalOutput());
                     inserts = true;
