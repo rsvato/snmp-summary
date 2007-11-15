@@ -44,6 +44,7 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
                     ipst.setString(3, o.getIface());
                     ipst.setLong(4, o.getTotalInput());
                     ipst.setLong(5, o.getTotalOutput());
+                    ipst.addBatch();
                     inserts = true;
                 }
 
