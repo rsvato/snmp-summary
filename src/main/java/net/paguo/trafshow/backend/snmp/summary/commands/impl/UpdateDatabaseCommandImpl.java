@@ -30,6 +30,8 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
             SearchTrafficDataCommandImpl search = new SearchTrafficDataCommandImpl();
             boolean inserts = false;
             boolean updates = false;
+            int icount = 0;
+            int ucount = 0;
             for (RouterSummaryTraffic o : commandObject.getTraffic().values()) {
                 Long id = search.findRecordId(o);
                 if (id != null){
@@ -38,6 +40,7 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
                     upst.setLong(2, o.getTotalOutput());
                     upst.addBatch();
                     updates = true;
+                    ucount++;
                 }else{
                     ipst.setDate(1, new Date(o.getDate().getTime()));
                     ipst.setString(2, o.getRouter());
@@ -46,9 +49,11 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
                     ipst.setLong(5, o.getTotalOutput());
                     ipst.addBatch();
                     inserts = true;
+                    icount++;
                 }
 
             }
+            log.debug("Assuming " + icount + " inserts and " + ucount + " updates" );
             search.closeConnection();
             if (inserts){
                 int[] i = ipst.executeBatch();
