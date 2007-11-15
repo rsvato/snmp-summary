@@ -29,7 +29,7 @@ public class SearchTrafficDataCommandImpl {
         Long result = null;
         try {
             PreparedStatement pst = connection.prepareStatement("select a_id from aggreg where cisco = ? and" +
-                    " iface = ? and date = ?");
+                    " iface = ? and dat = ?");
             pst.setString(1, record.getRouter());
             pst.setString(2, record.getIface());
             pst.setDate(3, new java.sql.Date(record.getDate().getTime()));
