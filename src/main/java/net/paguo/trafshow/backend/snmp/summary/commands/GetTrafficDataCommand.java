@@ -59,6 +59,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<Object> {
                 }
             }
         }
+        log.debug(result.size() + " records retrieved");
         log.debug("getData(): >>>>");
         return result;
     }
