@@ -21,4 +21,8 @@ public class TrafficCollector {
         }
         summaryTraffic.processRecord(record);
     }
+
+    public Map<String, RouterSummaryTraffic> getTraffic() {
+        return traffic;
+    }
 }

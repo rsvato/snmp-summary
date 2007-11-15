@@ -63,6 +63,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                 }
             }
         }
+        log.debug("Result size: " + collector.getTraffic().values().size());
         log.debug("getData(): >>>>");
         return collector;
     }
