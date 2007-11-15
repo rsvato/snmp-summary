@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GetTrafficDataCommand implements DatabaseCommand<Object> {
+public class GetTrafficDataCommand implements DatabaseCommand<List<TrafficRecord>> {
     private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t where dt between ? and ? order by cisco, interface, dt";
     private static final Log log = LogFactory.getLog(GetTrafficDataCommand.class);
     private Date start;
@@ -26,7 +26,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<Object> {
         this.end = to;
     }
 
-    public Object getData() {
+    public List<TrafficRecord> getData() {
         log.debug("getData(): <<<<");
         DBProxy proxy = DBProxyFactory.getDBProxy();
         Connection conn = null;
@@ -45,6 +45,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<Object> {
                 record.setInput(rs.getLong(4));
                 record.setOutput(rs.getLong(5));
                 record.setUptime(rs.getLong(6));
+                result.add(record);
             }
             rs.close();
             pst.close();
