@@ -16,7 +16,7 @@ public class TrafficCollector {
         RouterSummaryTraffic summaryTraffic = traffic.get(key);
         if (summaryTraffic == null){
             summaryTraffic = new RouterSummaryTraffic();
-            summaryTraffic.setCisco(record.getRouter());
+            summaryTraffic.setRouter(record.getRouter());
             summaryTraffic.setIface(record.getIface());
             summaryTraffic.setDate(record.getDatetime());
             traffic.put(key, summaryTraffic);

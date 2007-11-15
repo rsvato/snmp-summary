@@ -6,10 +6,14 @@ import java.util.Date;
  * @author Reyentenko
  */
 public class RouterSummaryTraffic {
-    private String cisco;
+    private String router;
+
     private String iface;
+
     private Long totalInput = 0l;
+
     private Long totalOutput = 0l;
+
     private Date date;
 
     private TrafficRecord lastProcessed;
@@ -20,10 +24,13 @@ public class RouterSummaryTraffic {
 
     public void processRecord(TrafficRecord record) {
         if (lastProcessed != null) {
-            // Check for cisco restart
+            // Check for router restart
             if (record.getUptime() > lastProcessed.getUptime()){
                totalInput += findDifference(lastProcessed.getInput(), record.getInput());
                totalOutput += findDifference(lastProcessed.getOutput(), record.getOutput());
+            }else{
+                totalInput += record.getInput();
+                totalOutput += record.getOutput();
             }
         }else{
             totalInput += record.getInput();
@@ -39,12 +46,20 @@ public class RouterSummaryTraffic {
         return ((long)Math.pow(2, 32) - input) + input1;
     }
 
-    public String getCisco() {
-        return cisco;
+    /**
+     * Test-only method.
+     * @param lastProcessed last processed record
+     */
+    void setLastProcessed(TrafficRecord lastProcessed) {
+        this.lastProcessed = lastProcessed;
     }
 
-    public void setCisco(String cisco) {
-        this.cisco = cisco;
+    public String getRouter() {
+        return router;
+    }
+
+    public void setRouter(String router) {
+        this.router = router;
     }
 
     public String getIface() {

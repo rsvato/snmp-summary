@@ -40,7 +40,7 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
                     updates = true;
                 }else{
                     ipst.setDate(1, new Date(o.getDate().getTime()));
-                    ipst.setString(2, o.getCisco());
+                    ipst.setString(2, o.getRouter());
                     ipst.setString(3, o.getIface());
                     ipst.setLong(4, o.getTotalInput());
                     ipst.setLong(5, o.getTotalOutput());
