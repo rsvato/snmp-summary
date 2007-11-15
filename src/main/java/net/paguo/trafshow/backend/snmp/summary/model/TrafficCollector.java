@@ -14,7 +14,7 @@ public class TrafficCollector {
     public void addTrafficRecord(TrafficRecord record){
         String key = record.getRouter() + "/" + record.getIface();
         RouterSummaryTraffic summaryTraffic = traffic.get(key);
-        if (key == null){
+        if (summaryTraffic == null){
             summaryTraffic = new RouterSummaryTraffic();
             summaryTraffic.setDate(record.getDatetime());
             traffic.put(key, summaryTraffic);
