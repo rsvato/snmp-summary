@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> {
-    private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t where dt between ? and ? order by cisco, interface, dt";
+    private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t where dt between ? and ? and (cisco, interface) in (select cisco, interface from cl) order by cisco, interface, dt";
     private static final Log log = LogFactory.getLog(GetTrafficDataCommand.class);
     private Date start;
     private Date end;

@@ -50,12 +50,12 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
             }
             search.closeConnection();
             if (inserts){
-                long i = ipst.executeUpdate();
-                log.debug(i + " records updated");
+                int[] i = ipst.executeBatch();
+                log.debug(i.length + " records inserted");
             }
             if (updates){
-                long i = upst.executeUpdate();
-                log.debug(i + " records updated");
+                int[] i = upst.executeBatch();
+                log.debug(i.length + " records updated");
             }
             ipst.close();
             upst.close();
