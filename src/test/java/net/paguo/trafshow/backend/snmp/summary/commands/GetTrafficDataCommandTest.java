@@ -16,8 +16,8 @@ public class GetTrafficDataCommandTest{
              Date begin = cal.getTime();
 
              cal.roll(Calendar.HOUR_OF_DAY, 23);
-             cal.roll(Calendar.MINUTE, 59);
-             cal.roll(Calendar.SECOND, 59);
+             cal.set(Calendar.MINUTE, 59);
+             cal.set(Calendar.SECOND, 59);
 
              Date end = cal.getTime();
 
