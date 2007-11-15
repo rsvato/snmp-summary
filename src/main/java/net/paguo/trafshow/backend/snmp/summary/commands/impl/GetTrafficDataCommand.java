@@ -1,9 +1,10 @@
-package net.paguo.trafshow.backend.snmp.summary.commands;
+package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
+import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
