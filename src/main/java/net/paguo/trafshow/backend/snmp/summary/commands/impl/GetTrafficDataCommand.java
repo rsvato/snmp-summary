@@ -37,8 +37,9 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             cal.roll(Calendar.HOUR, 1);
             Date media = cal.getTime();
             int processed = 0;
-            while(media.getTime() < end.getTime()) {
+            while(media.before(end)) {
                 log.debug("Setting end data to " + media);
+                log.debug("Start date is " + start);
                 pst.setTimestamp(1, new Timestamp(start.getTime()));
                 pst.setTimestamp(2, new Timestamp(media.getTime()));
                 ResultSet rs = pst.executeQuery();
@@ -57,6 +58,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                 rs.close();
                 pst.clearParameters();
                 start = (Date) media.clone();
+                cal.setTime(media);
                 cal.roll(Calendar.HOUR, 1);
                 media = cal.getTime();
             }
