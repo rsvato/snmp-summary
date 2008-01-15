@@ -37,9 +37,9 @@ public class App {
 
             Date begin = cal.getTime();
 
-            cal.roll(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
+            cal.roll(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 10);
 
             Date end = cal.getTime();
 

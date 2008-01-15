@@ -1,18 +1,15 @@
 package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 
+import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
-import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.Calendar;
 import java.util.Date;
 
 public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> {
@@ -35,23 +32,34 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
         try {
             conn = proxy.getConnection();
             PreparedStatement pst = conn.prepareStatement(SQL);
-            pst.setTimestamp(1, new Timestamp(start.getTime()));
-            pst.setTimestamp(2, new Timestamp(end.getTime()));
-            ResultSet rs = pst.executeQuery();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(start);
+            cal.roll(Calendar.HOUR, 1);
+            Date media = cal.getTime();
             int processed = 0;
-            while (rs.next()) {
-                TrafficRecord record = new TrafficRecord();
-                record.setDatetime(new Date(rs.getTimestamp(1).getTime()));
-                record.setRouter(rs.getString(2));
-                record.setIface(rs.getString(3));
-                record.setInput(rs.getLong(4));
-                record.setOutput(rs.getLong(5));
-                record.setUptime(rs.getLong(6));
-                collector.addTrafficRecord(record);
-                processed++;
+            while(media.getTime() < end.getTime()) {
+                log.debug("Setting end data to " + media);
+                pst.setTimestamp(1, new Timestamp(start.getTime()));
+                pst.setTimestamp(2, new Timestamp(media.getTime()));
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    TrafficRecord record = new TrafficRecord();
+                    record.setDatetime(new Date(rs.getTimestamp(1).getTime()));
+                    record.setRouter(rs.getString(2));
+                    record.setIface(rs.getString(3));
+                    record.setInput(rs.getLong(4));
+                    record.setOutput(rs.getLong(5));
+                    record.setUptime(rs.getLong(6));
+                    collector.addTrafficRecord(record);
+                    processed++;
+                }
+                log.debug(processed + " records processed so far");
+                rs.close();
+                pst.clearParameters();
+                start = (Date) media.clone();
+                cal.roll(Calendar.HOUR, 1);
+                media = cal.getTime();
             }
-            log.debug(processed + " records processed");
-            rs.close();
             pst.close();
         } catch (SQLException e) {
             log.error(e);
