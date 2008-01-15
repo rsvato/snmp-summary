@@ -71,4 +71,23 @@ public class TestRouterSummaryTraffic {
         traffic.processRecord(newRecord);
         Assert.assertEquals("Counters zeroed", Long.valueOf(6L), traffic.getTotalInput());
     }
+
+    @Test
+    public void TestZeroRecords(){
+        oldRecord.setInput(0L);
+        oldRecord.setOutput(0L);
+        TrafficRecord newRecord = createTrafficRecord(0L, 235L);
+        traffic.processRecord(oldRecord);
+        traffic.processRecord(newRecord);
+        Assert.assertEquals("No traffic expected", Long.valueOf(0L), traffic.getTotalInput());
+    }
+
+    @Test
+    public void TestEqualRecords(){
+        TrafficRecord newRecord = createTrafficRecord(oldRecord.getInput(), 235L);
+        traffic.processRecord(oldRecord);
+        Long oldValue = traffic.getTotalInput();
+        traffic.processRecord(newRecord);
+        Assert.assertEquals("No traffic expected", oldValue, traffic.getTotalInput());
+    }
 }

@@ -25,7 +25,7 @@ public class RouterSummaryTraffic {
     public void processRecord(TrafficRecord record) {
         if (lastProcessed != null) {
             // Check for router restart
-            if (record.getUptime() > lastProcessed.getUptime()){
+            if (record.getUptime() >= lastProcessed.getUptime()){
                totalInput += findDifference(lastProcessed.getInput(), record.getInput());
                totalOutput += findDifference(lastProcessed.getOutput(), record.getOutput());
             }else{
@@ -40,10 +40,9 @@ public class RouterSummaryTraffic {
     }
 
     private Long findDifference(Long input, Long input1) {
-        if (input1 > input){
-            return input1 - input;
-        }
-        return ((long)Math.pow(2, 32) - input) + input1;
+        return input1 >= input ?
+                input1 - input :
+                ((long) Math.pow(2, 32) - input) + input1;
     }
 
     /**
