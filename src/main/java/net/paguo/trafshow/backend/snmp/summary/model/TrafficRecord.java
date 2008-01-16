@@ -59,4 +59,13 @@ public class TrafficRecord {
     public void setUptime(Long uptime) {
         this.uptime = uptime;
     }
+
+    public TrafficRecord() {
+    }
+
+    public TrafficRecord(Long input, Long output, Long uptime) {
+        this.input = input;
+        this.output = output;
+        this.uptime = uptime;
+    }
 }

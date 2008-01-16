@@ -18,21 +18,22 @@ public class RouterSummaryTraffic {
 
     private TrafficRecord lastProcessed;
 
-    public RouterSummaryTraffic(){
+    public RouterSummaryTraffic() {
 
     }
 
     public void processRecord(TrafficRecord record) {
         if (lastProcessed != null) {
             // Check for router restart
-            if (record.getUptime() >= lastProcessed.getUptime()){
-               totalInput += findDifference(lastProcessed.getInput(), record.getInput());
-               totalOutput += findDifference(lastProcessed.getOutput(), record.getOutput());
-            }else{
+            if (record.getUptime() >= lastProcessed.getUptime()) {
+                totalInput += findDifference(lastProcessed.getInput(), record.getInput());
+                totalOutput += findDifference(lastProcessed.getOutput(), record.getOutput());
+            } else {
+                System.err.println("Possibly router restart");
                 totalInput += record.getInput();
                 totalOutput += record.getOutput();
             }
-        }else{
+        } else {
             totalInput = 0L;
             totalOutput = 0L;
         }
@@ -40,13 +41,21 @@ public class RouterSummaryTraffic {
     }
 
     private Long findDifference(Long input, Long input1) {
-        return input1 >= input ?
-                input1 - input :
-                ((long) Math.pow(2, 32) - input) + input1;
+        Long result = 0L;
+        final long difference = input - input1;
+        // On counter overflow this difference should be a reasonable high
+        // Other way we get abnormaly high values on ill-behaved routers
+        if (difference < 10000L) {
+            result = input1 - input;
+        } else {
+            result = ((long) Math.pow(2, 32) - input) + input1;
+        }
+        return Math.abs(result);
     }
 
     /**
      * Test-only method.
+     *
      * @param lastProcessed last processed record
      */
     void setLastProcessed(TrafficRecord lastProcessed) {
