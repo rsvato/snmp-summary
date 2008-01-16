@@ -58,9 +58,13 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                 rs.close();
                 pst.clearParameters();
                 start = (Date) media.clone();
-                cal.setTime(media);
-                cal.roll(Calendar.HOUR, 1);
+                cal.roll(Calendar.HOUR_OF_DAY, 1);
                 media = cal.getTime();
+                if (media.before(start)){
+                    cal.roll(Calendar.DAY_OF_MONTH, 1);
+                    cal.roll(Calendar.SECOND, -1);
+                    media = cal.getTime();
+                }
             }
             pst.close();
         } catch (SQLException e) {
