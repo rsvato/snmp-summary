@@ -29,7 +29,6 @@ public class RouterSummaryTraffic {
                 totalInput += findDifference(lastProcessed.getInput(), record.getInput());
                 totalOutput += findDifference(lastProcessed.getOutput(), record.getOutput());
             } else {
-                System.err.println("Possibly router restart");
                 totalInput += record.getInput();
                 totalOutput += record.getOutput();
             }

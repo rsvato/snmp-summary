@@ -44,8 +44,8 @@ public class TestRouterSummaryTraffic {
     @Test
     public void testIntialFill(){
         traffic.processRecord(oldRecord);
-        Assert.assertEquals("No traffic yet", Long.valueOf(5L), traffic.getTotalInput());
-        Assert.assertEquals("No traffic yet", Long.valueOf(5L), traffic.getTotalOutput());
+        Assert.assertEquals("No traffic yet", Long.valueOf(0L), traffic.getTotalInput());
+        Assert.assertEquals("No traffic yet", Long.valueOf(0L), traffic.getTotalOutput());
     }
 
     @Test
@@ -59,9 +59,9 @@ public class TestRouterSummaryTraffic {
     @Test
     public void testAddOverflowRecord(){
         traffic.processRecord(oldRecord);
-        TrafficRecord newRecord = createTrafficRecord(1L, 235L);
+        TrafficRecord newRecord = createTrafficRecord(-10004L, 235L);
         traffic.processRecord(newRecord);
-        Assert.assertEquals("Much traffic expected", Long.valueOf(4294967297L), traffic.getTotalInput());
+        Assert.assertEquals("Much traffic expected", Long.valueOf(4294957287L), traffic.getTotalInput());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestRouterSummaryTraffic {
         traffic.processRecord(oldRecord);
         TrafficRecord newRecord = createTrafficRecord(1L, 20L);
         traffic.processRecord(newRecord);
-        Assert.assertEquals("Counters zeroed", Long.valueOf(6L), traffic.getTotalInput());
+        Assert.assertEquals("Counters zeroed", Long.valueOf(1L), traffic.getTotalInput());
     }
 
     @Test
