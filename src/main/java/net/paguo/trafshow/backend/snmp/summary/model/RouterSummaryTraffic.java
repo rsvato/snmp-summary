@@ -33,8 +33,8 @@ public class RouterSummaryTraffic {
                 totalOutput += record.getOutput();
             }
         }else{
-            totalInput += record.getInput();
-            totalOutput += record.getOutput();
+            totalInput = 0L;
+            totalOutput = 0L;
         }
         this.lastProcessed = record;
     }
