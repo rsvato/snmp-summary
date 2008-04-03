@@ -46,7 +46,7 @@ public class DateRollerJodaImpl implements DateRoller{
         return curDateTime.plusHours(1);
     }
 
-     public Date getNextDate() {
+     public Date getNextDate() {                 
         return rollMedianDate().toDate();
     }
 

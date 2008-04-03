@@ -5,8 +5,9 @@ import java.util.Calendar;
 
 /**
  * @author Reyentenko
- * @Deprecated
+ *
  */
+@Deprecated
 public class DateRollerJDKImpl implements DateRoller {
     private Date start;
     private Date end;
