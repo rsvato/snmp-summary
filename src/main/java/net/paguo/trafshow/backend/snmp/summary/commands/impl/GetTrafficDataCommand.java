@@ -3,13 +3,14 @@ package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
+import net.paguo.trafshow.backend.snmp.summary.model.DateRoller;
+import net.paguo.trafshow.backend.snmp.summary.model.DateRollerJDKImpl;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.*;
-import java.util.Calendar;
 import java.util.Date;
 
 public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> {
@@ -32,15 +33,13 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
         try {
             conn = proxy.getConnection();
             PreparedStatement pst = conn.prepareStatement(SQL);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(start);
-            cal.roll(Calendar.HOUR, 1);
-            Date media = cal.getTime();
+            DateRoller roller = new DateRollerJDKImpl(start, end);
             int processed = 0;
-            while(media.before(end)) {
-                log.debug("Setting end data to " + media);
-                log.debug("Start date is " + start);
-                pst.setTimestamp(1, new Timestamp(start.getTime()));
+            while(roller.hasNextDate()) {
+                Date media = roller.getNextDate();
+                Date curDate = roller.getCurrentDate();
+                log.debug("Period: " + curDate + " " + media);
+                pst.setTimestamp(1, new Timestamp(curDate.getTime()));
                 pst.setTimestamp(2, new Timestamp(media.getTime()));
                 ResultSet rs = pst.executeQuery();
                 while (rs.next()) {
@@ -57,14 +56,6 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                 log.debug(processed + " records processed so far");
                 rs.close();
                 pst.clearParameters();
-                start = (Date) media.clone();
-                cal.roll(Calendar.HOUR_OF_DAY, 1);
-                media = cal.getTime();
-                if (media.before(start)){
-                    cal.roll(Calendar.DAY_OF_MONTH, 1);
-                    cal.roll(Calendar.SECOND, -1);
-                    media = cal.getTime();
-                }
             }
             pst.close();
         } catch (SQLException e) {

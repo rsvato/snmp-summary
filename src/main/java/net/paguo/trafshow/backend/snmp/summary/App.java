@@ -4,15 +4,14 @@ import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.commands.UpdateDatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.commands.impl.GetTrafficDataCommand;
 import net.paguo.trafshow.backend.snmp.summary.commands.impl.UpdateDatabaseCommandImpl;
+import net.paguo.trafshow.backend.snmp.summary.model.BadParameterException;
+import net.paguo.trafshow.backend.snmp.summary.model.DateParameters;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.text.DateFormat;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Main application class
@@ -27,34 +26,21 @@ public class App {
         }
         long now = System.currentTimeMillis();
         String arg = args[0];
-        Date date = FORMAT.parse(arg, new ParsePosition(0));  
-        if (date != null && FORMAT.format(date).equals(arg)){
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 10);
 
-            Date begin = cal.getTime();
-
-            cal.roll(Calendar.DAY_OF_MONTH, 1);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 10);
-
-            Date end = cal.getTime();
-
-            DatabaseCommand<TrafficCollector> command = new GetTrafficDataCommand(begin, end);
+        try {
+            DateParameters parameters = DateParameters.get(arg);
+            DatabaseCommand<TrafficCollector> command = new GetTrafficDataCommand(parameters.getStartDate(),
+                    parameters.getEndDate());
             UpdateDatabaseCommand<TrafficCollector> updateDatabaseCommand
                     = new UpdateDatabaseCommandImpl();
             final TrafficCollector collector = command.getData();
             updateDatabaseCommand.doUpdate(collector);
             log.debug("Time of processing: " + (System.currentTimeMillis() - now));
-        }else{
+        } catch (BadParameterException e) {
             final String errorMessage = new StringBuilder().append("Invalid date: ").
-                    append(arg).toString();
+                    append(e.getBadParameter()).toString();
             log.error(errorMessage);
             System.err.println(errorMessage);
-
         }
     }
 }
