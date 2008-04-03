@@ -3,10 +3,7 @@ package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
-import net.paguo.trafshow.backend.snmp.summary.model.DateRoller;
-import net.paguo.trafshow.backend.snmp.summary.model.DateRollerJDKImpl;
-import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
-import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
+import net.paguo.trafshow.backend.snmp.summary.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +30,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
         try {
             conn = proxy.getConnection();
             PreparedStatement pst = conn.prepareStatement(SQL);
-            DateRoller roller = new DateRollerJDKImpl(start, end);
+            DateRoller roller = new DateRollerJodaImpl(start, end);
             int processed = 0;
             while(roller.hasNextDate()) {
                 Date media = roller.getNextDate();

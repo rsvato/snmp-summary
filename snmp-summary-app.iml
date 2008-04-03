@@ -9,6 +9,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -100,6 +102,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="joda-time:joda-time:1.5.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/joda-time/joda-time/1.5.2/joda-time-1.5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/joda-time/joda-time/1.5.2/joda-time-1.5.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/joda-time/joda-time/1.5.2/joda-time-1.5.2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 /**
  * @author Reyentenko
+ * @Deprecated
  */
 public class DateRollerJDKImpl implements DateRoller {
     private Date start;
@@ -37,7 +38,7 @@ public class DateRollerJDKImpl implements DateRoller {
         return medianDate.before(end);
     }
 
-    private Date rollMedianDate(){
+    protected Date rollMedianDate(){
         if (medianDate != null){
             start = new Date(medianDate.getTime());
         }
@@ -53,7 +54,7 @@ public class DateRollerJDKImpl implements DateRoller {
         return medianDate;
     }
 
-    private Date upOneHour() {
+    protected Date upOneHour() {
         long startTime = start.getTime();
         Date median = new Date(startTime + 3600 * 1000);
         return median;
