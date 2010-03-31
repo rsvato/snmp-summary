@@ -36,7 +36,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             while(roller.hasNextDate()) {
                 Parameter start = new Parameter.TimestampParameter(1,
                         new Timestamp(roller.getCurrentDate().getTime()));
-                Parameter end = new Parameter.TimestampParameter(1,
+                Parameter end = new Parameter.TimestampParameter(2,
                         new Timestamp(roller.getCurrentDate().getTime()));
                 handler.handle(SQL, new ResultsetCommand() {
                     public Object process(ResultSet rs) throws SQLException {
