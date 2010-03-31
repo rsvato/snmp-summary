@@ -81,16 +81,8 @@ public class RouterSummaryTraffic {
         return totalInput;
     }
 
-    public void setTotalInput(Long totalInput) {
-        this.totalInput = totalInput;
-    }
-
     public Long getTotalOutput() {
         return totalOutput;
-    }
-
-    public void setTotalOutput(Long totalOutput) {
-        this.totalOutput = totalOutput;
     }
 
     public Date getDate() {

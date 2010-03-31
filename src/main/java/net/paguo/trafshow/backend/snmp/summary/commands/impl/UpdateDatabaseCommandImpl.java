@@ -20,10 +20,9 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
     public static final Log log = LogFactory.getLog(UpdateDatabaseCommandImpl.class);
     public void doUpdate(TrafficCollector commandObject) {
         log.debug("doUpdate() <<<<");
-        DBProxy proxy = DBProxyFactory.getDBProxy();
         Connection con = null;
         try{
-            con = proxy.getConnection();
+            con = DBProxyFactory.getDBProxy().getConnection();
             PreparedStatement ipst = con.prepareStatement("insert into aggreg(dat, cisco, iface, t_in, t_out, date)" +
                     " values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
             PreparedStatement upst = con.prepareStatement("update aggreg set t_in = ?, t_out = ?, date=CURRENT_TIMESTAMP where a_id = ?");

@@ -17,6 +17,8 @@ import java.sql.SQLException;
 public class SearchTrafficDataCommandImpl {
     private static final Log log = LogFactory.getLog(SearchTrafficDataCommandImpl.class);
     private Connection connection;
+    private static final String FINDER_SQL = "select a_id from aggreg where cisco = ? and" +
+            " iface = ? and dat = ?";
 
     public SearchTrafficDataCommandImpl() {
     }
@@ -28,8 +30,7 @@ public class SearchTrafficDataCommandImpl {
         }
         Long result = null;
         try {
-            PreparedStatement pst = connection.prepareStatement("select a_id from aggreg where cisco = ? and" +
-                    " iface = ? and dat = ?");
+            PreparedStatement pst = connection.prepareStatement(FINDER_SQL);
             pst.setString(1, record.getRouter());
             pst.setString(2, record.getIface());
             pst.setDate(3, new java.sql.Date(record.getDate().getTime()));

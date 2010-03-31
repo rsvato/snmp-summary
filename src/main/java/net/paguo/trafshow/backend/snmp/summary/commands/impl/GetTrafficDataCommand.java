@@ -1,6 +1,9 @@
 package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 
 import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
+import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.Parameter;
+import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.PreparedStatementHandler;
+import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.ResultsetCommand;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
 import net.paguo.trafshow.backend.snmp.summary.model.*;
@@ -26,38 +29,25 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
     public TrafficCollector getData() {
         log.debug("getData(): <<<<");
         log.debug("Parameters are: " + start.toString() + " " + end.toString());
-        DBProxy proxy = DBProxyFactory.getDBProxy();
-        Connection conn = null;
-        TrafficCollector collector = new TrafficCollector();
+        final TrafficCollector collector = new TrafficCollector();
         try {
-            conn = proxy.getConnection();
-            PreparedStatement pst = conn.prepareStatement(SQL);
+            PreparedStatementHandler handler = new PreparedStatementHandler();
             DateRoller roller = new DateRollerJodaImpl(start, end);
-            int processed = 0;
             while(roller.hasNextDate()) {
-                pst.setTimestamp(1, new Timestamp(roller.getCurrentDate().getTime()));
-                pst.setTimestamp(2, new Timestamp(roller.getNextDate().getTime()));
-                ResultSet rs = pst.executeQuery();
-                while (rs.next()) {
-                    TrafficRecord record = createRecord(rs);
-                    collector.addTrafficRecord(record);
-                    processed++;
-                }
-                log.debug(processed + " records processed so far");
-                rs.close();
-                pst.clearParameters();
+                Parameter start = new Parameter.TimestampParameter(1,
+                        new Timestamp(roller.getCurrentDate().getTime()));
+                Parameter end = new Parameter.TimestampParameter(1,
+                        new Timestamp(roller.getCurrentDate().getTime()));
+                handler.handle(SQL, new ResultsetCommand() {
+                    public Object process(ResultSet rs) throws SQLException {
+                       collector.addTrafficRecord(createRecord(rs));
+                       return null;
+                    }
+                }, start, end);
             }
-            pst.close();
+            handler.closeConnection();
         } catch (SQLException e) {
             log.error(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    log.error("Error when closing connection", e);
-                }
-            }
         }
         log.debug("Result size: " + collector.getTraffic().values().size());
         log.debug("getData(): >>>>");
