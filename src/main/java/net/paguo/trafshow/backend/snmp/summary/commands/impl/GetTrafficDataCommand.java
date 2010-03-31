@@ -11,7 +11,9 @@ import java.sql.*;
 import java.util.Date;
 
 public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> {
-    private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t where dt between ? and ? and (cisco, interface) in (select cisco, interface from cl) order by cisco, interface, dt";
+    private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t " +
+            "where dt between ? and ? and (cisco, interface) in (select cisco, interface from cl) " +
+            "order by cisco, interface, dt";
     private static final Log log = LogFactory.getLog(GetTrafficDataCommand.class);
     private Date start;
     private Date end;
@@ -33,20 +35,11 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             DateRoller roller = new DateRollerJodaImpl(start, end);
             int processed = 0;
             while(roller.hasNextDate()) {
-                Date media = roller.getNextDate();
-                Date curDate = roller.getCurrentDate();
-                log.debug("Period: " + curDate + " " + media);
-                pst.setTimestamp(1, new Timestamp(curDate.getTime()));
-                pst.setTimestamp(2, new Timestamp(media.getTime()));
+                pst.setTimestamp(1, new Timestamp(roller.getCurrentDate().getTime()));
+                pst.setTimestamp(2, new Timestamp(roller.getNextDate().getTime()));
                 ResultSet rs = pst.executeQuery();
                 while (rs.next()) {
-                    TrafficRecord record = new TrafficRecord();
-                    record.setDatetime(new Date(rs.getTimestamp(1).getTime()));
-                    record.setRouter(rs.getString(2));
-                    record.setIface(rs.getString(3));
-                    record.setInput(rs.getLong(4));
-                    record.setOutput(rs.getLong(5));
-                    record.setUptime(rs.getLong(6));
+                    TrafficRecord record = createRecord(rs);
                     collector.addTrafficRecord(record);
                     processed++;
                 }
@@ -69,5 +62,16 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
         log.debug("Result size: " + collector.getTraffic().values().size());
         log.debug("getData(): >>>>");
         return collector;
+    }
+
+    private static TrafficRecord createRecord(ResultSet rs) throws SQLException {
+        TrafficRecord record = new TrafficRecord();
+        record.setDatetime(new Date(rs.getTimestamp(1).getTime()));
+        record.setRouter(rs.getString(2));
+        record.setIface(rs.getString(3));
+        record.setInput(rs.getLong(4));
+        record.setOutput(rs.getLong(5));
+        record.setUptime(rs.getLong(6));
+        return record;
     }
 }

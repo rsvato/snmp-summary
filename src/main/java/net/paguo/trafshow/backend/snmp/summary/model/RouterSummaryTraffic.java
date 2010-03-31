@@ -43,7 +43,7 @@ public class RouterSummaryTraffic {
         Long result = 0L;
         final long difference = input - input1;
         // On counter overflow this difference should be a reasonable high
-        // Other way we get abnormaly high values on ill-behaved routers
+        // Other way we get abnormally high values on ill-behaved routers
         if (difference < 10000L) {
             result = input1 - input;
         } else {
