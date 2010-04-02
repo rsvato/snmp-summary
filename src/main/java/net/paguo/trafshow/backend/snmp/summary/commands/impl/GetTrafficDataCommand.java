@@ -4,13 +4,16 @@ import net.paguo.trafshow.backend.snmp.summary.commands.DatabaseCommand;
 import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.Parameter;
 import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.PreparedStatementHandler;
 import net.paguo.trafshow.backend.snmp.summary.commands.impl.util.ResultsetCommand;
-import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
-import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
-import net.paguo.trafshow.backend.snmp.summary.model.*;
+import net.paguo.trafshow.backend.snmp.summary.model.DateRoller;
+import net.paguo.trafshow.backend.snmp.summary.model.DateRollerJodaImpl;
+import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
+import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> {
@@ -38,7 +41,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                         new Timestamp(roller.getCurrentDate().getTime()));
                 Parameter end = new Parameter.TimestampParameter(2,
                         new Timestamp(roller.getCurrentDate().getTime()));
-                handler.handle(SQL, new ResultsetCommand() {
+                handler.handle(SQL, new ResultsetCommand<Object>() {
                     public Object process(ResultSet rs) throws SQLException {
                        while(rs.next()){
                            collector.addTrafficRecord(createRecord(rs));
