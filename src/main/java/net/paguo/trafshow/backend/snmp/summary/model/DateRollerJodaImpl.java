@@ -1,10 +1,8 @@
 package net.paguo.trafshow.backend.snmp.summary.model;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 
 import java.util.Date;
-import java.util.Calendar;
 
 /**
  * @author Reyentenko
@@ -24,11 +22,15 @@ public class DateRollerJodaImpl implements DateRoller{
         this.end = new DateTime(date);
     }
 
+    /*
+     * @return
+     */
     public boolean hasNextDate() {
         if (null == medianDate) {
             medianDate = start;
         }
-        return medianDate.isBefore(end);
+        medianDate = rollMedianDate();
+        return medianDate.isBefore(end) || medianDate.isEqual(end);
     }
 
 
@@ -46,8 +48,8 @@ public class DateRollerJodaImpl implements DateRoller{
         return curDateTime.plusHours(1);
     }
 
-     public Date getNextDate() {                 
-        return rollMedianDate().toDate();
+     public Date getNextDate() {
+        return medianDate.toDate();
     }
 
     public Date getCurrentDate() {

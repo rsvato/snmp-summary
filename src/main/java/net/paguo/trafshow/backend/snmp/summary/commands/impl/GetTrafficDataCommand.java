@@ -38,12 +38,10 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             DateRoller roller = new DateRollerJodaImpl(start, end);
             int i = 0;
             while(roller.hasNextDate()) {
-                Date media = roller.getNextDate();
-                Date curDate = roller.getCurrentDate();
                 Parameter start = new Parameter.TimestampParameter(1,
-                        new Timestamp(curDate.getTime()));
+                        new Timestamp(roller.getCurrentDate().getTime()));
                 Parameter end = new Parameter.TimestampParameter(2,
-                        new Timestamp(media.getTime()));
+                        new Timestamp(roller.getNextDate().getTime()));
                 handler.handle(SQL, new ResultsetCommand<Object>() {
                     public Object process(ResultSet rs) throws SQLException {
                        while(rs.next()){
