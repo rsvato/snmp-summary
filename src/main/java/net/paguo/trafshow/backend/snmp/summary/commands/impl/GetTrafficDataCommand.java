@@ -37,10 +37,12 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             PreparedStatementHandler handler = new PreparedStatementHandler();
             DateRoller roller = new DateRollerJodaImpl(start, end);
             while(roller.hasNextDate()) {
+                int i = 0;
+
                 Parameter start = new Parameter.TimestampParameter(1,
                         new Timestamp(roller.getCurrentDate().getTime()));
                 Parameter end = new Parameter.TimestampParameter(2,
-                        new Timestamp(roller.getCurrentDate().getTime()));
+                        new Timestamp(roller.getNextDate().getTime()));
                 handler.handle(SQL, new ResultsetCommand<Object>() {
                     public Object process(ResultSet rs) throws SQLException {
                        while(rs.next()){
@@ -49,6 +51,8 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                        return null;
                     }
                 }, start, end);
+                i++;
+                log.debug(i + "records processed so far");
             }
             handler.closeConnection();
         } catch (SQLException e) {
