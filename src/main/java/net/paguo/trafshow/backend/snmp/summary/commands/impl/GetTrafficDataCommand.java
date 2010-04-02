@@ -40,7 +40,9 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
                         new Timestamp(roller.getCurrentDate().getTime()));
                 handler.handle(SQL, new ResultsetCommand() {
                     public Object process(ResultSet rs) throws SQLException {
-                       collector.addTrafficRecord(createRecord(rs));
+                       while(rs.next()){
+                           collector.addTrafficRecord(createRecord(rs));
+                       }
                        return null;
                     }
                 }, start, end);
