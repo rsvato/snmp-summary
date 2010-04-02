@@ -53,7 +53,7 @@ public class DBProxyFactory {
 
     private static Properties loadDefaultProperties() {
         Properties props = new Properties();
-        props.put(HOST_KEY, "mail");
+        props.put(HOST_KEY, "localhost");
         props.put(DATABASE_KEY, "traffic");
         props.put(USER_KEY, "root");
         props.put(PASSWORD_KEY, "test12~");
