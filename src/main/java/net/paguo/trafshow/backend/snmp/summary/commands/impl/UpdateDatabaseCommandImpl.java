@@ -1,12 +1,11 @@
 package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 
 import net.paguo.trafshow.backend.snmp.summary.commands.UpdateDatabaseCommand;
-import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import net.paguo.trafshow.backend.snmp.summary.model.RouterSummaryTraffic;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +16,7 @@ import java.sql.Date;
  * @author Reyentenko
  */
 public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficCollector> {
-    public static final Log log = LogFactory.getLog(UpdateDatabaseCommandImpl.class);
+    public static final Logger log = LoggerFactory.getLogger(UpdateDatabaseCommandImpl.class);
     public void doUpdate(TrafficCollector commandObject) {
         log.debug("doUpdate() <<<<");
         Connection con = null;
@@ -65,13 +64,13 @@ public class UpdateDatabaseCommandImpl implements UpdateDatabaseCommand<TrafficC
             ipst.close();
             upst.close();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("Error updating db", e);
         } finally {
             if (con != null){
                 try {
                     con.close();
                 } catch (SQLException e) {
-                    log.error(e);
+                    log.error("Error closing connection", e);
                 }
             }
         }

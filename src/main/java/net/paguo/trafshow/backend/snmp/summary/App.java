@@ -7,18 +7,14 @@ import net.paguo.trafshow.backend.snmp.summary.commands.impl.UpdateDatabaseComma
 import net.paguo.trafshow.backend.snmp.summary.model.BadParameterException;
 import net.paguo.trafshow.backend.snmp.summary.model.DateParameters;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main application class
  */
 public class App {
-    private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static final Log log = LogFactory.getLog(App.class);
+    private static final Logger log = LoggerFactory.getLogger(App.class);
     public static void main(String[] args) {
         if (args.length < 1){
             System.err.println("Usage: net.paguo.trafshow.backend.snmp.summary.App YYYY-MM-DD");
@@ -37,10 +33,7 @@ public class App {
             updateDatabaseCommand.doUpdate(collector);
             log.debug("Time of processing: " + (System.currentTimeMillis() - now));
         } catch (BadParameterException e) {
-            final String errorMessage = new StringBuilder().append("Invalid date: ").
-                    append(e.getBadParameter()).toString();
-            log.error(errorMessage);
-            System.err.println(errorMessage);
+            log.error("Invalid date {}", e.getBadParameter());
         }
     }
 }

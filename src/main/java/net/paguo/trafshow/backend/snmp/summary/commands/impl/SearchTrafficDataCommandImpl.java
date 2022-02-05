@@ -3,8 +3,8 @@ package net.paguo.trafshow.backend.snmp.summary.commands.impl;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxy;
 import net.paguo.trafshow.backend.snmp.summary.database.DBProxyFactory;
 import net.paguo.trafshow.backend.snmp.summary.model.RouterSummaryTraffic;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
  * @author Reyentenko
  */
 public class SearchTrafficDataCommandImpl {
-    private static final Log log = LogFactory.getLog(SearchTrafficDataCommandImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SearchTrafficDataCommandImpl.class);
     private Connection connection;
     private static final String FINDER_SQL = "select a_id from aggreg where cisco = ? and" +
             " iface = ? and dat = ?";
@@ -41,7 +41,7 @@ public class SearchTrafficDataCommandImpl {
             rs.close();
             pst.close();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("Cannot find record id", e);
         }
         return result;
     }
@@ -51,7 +51,7 @@ public class SearchTrafficDataCommandImpl {
         try {
             connection = proxy.getConnection();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("Error creating connection", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class SearchTrafficDataCommandImpl {
             try {
                 connection.close();
             } catch (SQLException e) {
-                log.error(e);
+                log.error("Error closing connection", e);
             }
         }
     }

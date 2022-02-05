@@ -8,8 +8,8 @@ import net.paguo.trafshow.backend.snmp.summary.model.DateRoller;
 import net.paguo.trafshow.backend.snmp.summary.model.DateRollerJodaImpl;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficCollector;
 import net.paguo.trafshow.backend.snmp.summary.model.TrafficRecord;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
     private static final String SQL = "select dt, cisco, interface, inoctets, outoctets, uptime from tr_with_uptime t " +
             "where dt between ? and ? and (cisco, interface) in (select cisco, interface from cl) " +
             "order by cisco, interface, dt";
-    private static final Log log = LogFactory.getLog(GetTrafficDataCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(GetTrafficDataCommand.class);
     private Date start;
     private Date end;
 
@@ -55,7 +55,7 @@ public class GetTrafficDataCommand implements DatabaseCommand<TrafficCollector> 
             }
             handler.closeConnection();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("SQLException during get data process", e);
         }
         log.debug("Result size: " + collector.getTraffic().values().size());
         log.debug("getData(): >>>>");
